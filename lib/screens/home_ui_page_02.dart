@@ -1,11 +1,14 @@
+import 'package:bmii/Provider/data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 
 class page_02 extends StatelessWidget {
      page_02({Key? key}) : super(key: key);
-  String BMI_value ="18.5";
-  String Intro = "Normal";
-  String MSG = "You Have Perfect BMI !";
+//  String BMI_value ="18.5";
+ // String Intro = "Normal";
+ // String MSG = "You Have Perfect BMI !";
 
   @override
   Widget build(BuildContext context) {
@@ -36,33 +39,37 @@ class page_02 extends StatelessWidget {
                 color: Color(0xFF232336),
                 borderRadius: BorderRadius.circular(15),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(Intro,
-                    style: TextStyle(
-                      color: Color(0xFF7ED779),
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
+              child:Consumer<Dataprovider>(builder: (context,provider,child){
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(provider.Intro(),
+                      style: TextStyle(
+                        color: Color(0xFF7ED779),
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
 
+                      ),
                     ),
-                  ),
-                  Text(BMI_value,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 90,
-                      fontWeight: FontWeight.bold
+                    Text(provider.calculateBMI().toInt().toString(),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 90,
+                          fontWeight: FontWeight.bold
+                      ),
                     ),
-                  ),
-                  Text(MSG,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,
-                    ),
-                  )
+                    Text(provider.getMessage(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25,
+                      ),
+                    )
 
-                ],
+                  ],
+                );
+              }
               ),
+
             ),
           ],
         ),

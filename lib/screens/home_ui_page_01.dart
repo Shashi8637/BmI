@@ -1,18 +1,11 @@
+import 'package:bmii/Provider/data.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:bmii/Provider/provider.dart';
 import 'home_ui_page_02.dart';
 
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  double slidervalue=0.1;
+class Home extends StatelessWidget {
+     Home({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,77 +13,92 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: const Center(child: Text("BMI  CALCULATOR")),
         backgroundColor: const Color((0xFF101428),
+
         ),
+        elevation: 0,
       ),
       body: Container(
         margin: const EdgeInsets.all(10),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child: Container(
-                    height: 150,
-                    decoration: BoxDecoration(
+            Consumer<Dataprovider>(builder: (context,provider,child){
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: (){
+                          provider.setGender(true);
+                      },
+                      child: Container(
+                        height: 150,
+                        decoration: BoxDecoration(
 
-                      color: const Color(0xFF232336),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.male,
-                          size: 50,
-                          color: Colors.white,
+                          color: provider.Gender ?  Color(0xFF232336) : Color(0xFFFF1D1E33),
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Text("MALE",
-                          style: TextStyle(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.male,
+                              size: 50,
                               color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold
-                          ),
-                        )
-                      ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Text("MALE",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: Container(
-                    height: 150,
-                    decoration: BoxDecoration(
-                        color:const Color(0xFF232336),
-                        borderRadius: BorderRadius.circular(20)
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.female,
-                          size: 50,
-                          color: Colors.white,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Text("FEMALE",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold
-                          ),
-                        )
-                      ],
-                    ),
+                  const SizedBox(
+                    width: 10,
                   ),
-                )
-              ],
-            ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap:(){
+              provider.setGender(false);
+              },
+                      child: Container(
+                        height: 150,
+                        decoration: BoxDecoration(
+                            color:provider.Gender ?  Color(0xFF1D1E33) : Color(0xFF232336) ,
+                            borderRadius: BorderRadius.circular(20)
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.female,
+                              size: 50,
+                              color: Colors.white,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Text("FEMALE",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              );
+            }),
+
             const SizedBox(
               height: 20,
             ),
@@ -116,14 +124,17 @@ class _HomeState extends State<Home> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text("150",
-                        style: TextStyle(
-                          fontSize: 50,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                      Consumer<Dataprovider>(builder: (context,provider,child){
+                        return Text(provider.Hight.toString(),
+                          style: TextStyle(
+                            fontSize: 50,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
 
-                      ),
+                        );
+                      }),
+
                       const SizedBox(
                         width: 3,
                       ),
@@ -140,15 +151,18 @@ class _HomeState extends State<Home> {
 
                     ],
                   ),
-                  Slider(
-                      activeColor: Colors.green ,
-                      inactiveColor: Colors.white,
-                      value: slidervalue,
-                      onChanged: (double value){
-                        setState(() {
-                          slidervalue=value;
+                  Consumer<Dataprovider>(builder: (context,provider,child){
+                    return Slider(
+                        activeColor: Color(0xFFca1b53) ,
+                        inactiveColor:Colors.white,
+                        value:  provider.Hight.toDouble(),
+                        min: provider.kminSliderHight,
+                        max: provider.kmaxSliderHight,
+                        onChanged: (double value){
+                          provider.setHight(value.round());
                         });
-                      })
+                  }),
+
 
                 ],
               ),
@@ -179,31 +193,47 @@ class _HomeState extends State<Home> {
                               fontWeight: FontWeight.bold
                           ),
                         ),
-                        const Text("59",
-                          style: TextStyle(
-                            fontSize: 30,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const CircleAvatar(
-                              child: Icon(Icons.add,
-                                color: Colors.green,
-                              ),
-                            ) ,
-                            const SizedBox(
-                              width: 20,
+                        Consumer<Dataprovider>(builder: (context,provider,child){
+                          return  Text(provider.Weight.toString(),
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: Colors.white,
                             ),
-                            const CircleAvatar(
-                              child: Icon(Icons.remove,
-                                color: Colors.yellowAccent,
+                          );
+                        }),
+                        Consumer<Dataprovider>(builder: (context,provider,child){
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: (){
+                                  provider.setWeight(provider.Weight+1);
+                                 // print(provider.Weight.toString());
+                                },
+                                child: const CircleAvatar(
+                                  child: Icon(Icons.add,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ) ,
+                              const SizedBox(
+                                width: 20,
                               ),
-                              backgroundColor: Colors.grey,
-                            )
-                          ],
-                        )
+                              GestureDetector(
+                                onTap: (){
+                                  provider.setWeight(provider.Weight-1);
+                                },
+                                child: const CircleAvatar(
+                                  child: Icon(Icons.remove,
+                                    color: Colors.yellowAccent,
+                                  ),
+                                  backgroundColor: Colors.grey,
+                                ),
+                              )
+                            ],
+                          );
+                        }),
+
                       ],
                     ),
                   ),
@@ -231,31 +261,46 @@ class _HomeState extends State<Home> {
                               fontWeight: FontWeight.bold
                           ),
                         ),
-                        const Text("19",
-                          style: TextStyle(
-                            fontSize: 30,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const CircleAvatar(
-                              child: Icon(Icons.add,
-                                color: Colors.green,
-                              ),
-                            ) ,
-                            const SizedBox(
-                              width: 20,
+                        Consumer<Dataprovider>(builder: (context,provider,child){
+                          return Text(provider.Age.toString(),
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: Colors.white,
                             ),
-                            const CircleAvatar(
-                              child: Icon(Icons.remove,
-                                color: Colors.yellowAccent,
+                          );
+                        }),
+                        Consumer<Dataprovider>(builder: (context,provider,child){
+                         return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: (){
+                                  provider.setAge(provider.Age+1);
+                                },
+                                child: const CircleAvatar(
+                                  child: Icon(Icons.add,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ) ,
+                              const SizedBox(
+                                width: 20,
                               ),
-                              backgroundColor: Colors.grey,
-                            )
-                          ],
-                        )
+                              GestureDetector(
+                                onTap: (){
+                                  provider.setAge(provider.Age-1);
+                                },
+                                child: const CircleAvatar(
+                                  child: Icon(Icons.remove,
+                                    color: Colors.yellowAccent,
+                                  ),
+                                  backgroundColor: Colors.grey,
+                                ),
+                              )
+                            ],
+                          );
+                        }),
+
                       ],
                     ),
 
